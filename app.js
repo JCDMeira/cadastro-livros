@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ mongoose
   .catch((e) => console.log(e));
 
 const app = express();
+
+app.use(morgan('dev'));
 
 app.use((req, res, next) => {
   res.status(200).send({
