@@ -20,9 +20,24 @@ const app = express();
 
 app.use(morgan('dev'));
 
-app.use((req, res, next) => {
+app.use('/home', (req, res, next) => {
   res.status(200).send({
     mensagem: 'ok',
+  });
+});
+
+app.use((req, res, next) => {
+  const error = new Error('Page not found...');
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  return res.json({
+    errors: {
+      message: error.message,
+    },
   });
 });
 
