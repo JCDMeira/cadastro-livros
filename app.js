@@ -20,7 +20,7 @@ const app = express();
 
 app.use(morgan('dev'));
 
-app.use('/home', (req, res, next) => {
+app.use('/', (req, res) => {
   res.status(200).send({
     mensagem: 'ok',
   });
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
   next(error);
 });
 
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   res.status(error.status || 500);
   return res.json({
     errors: {
