@@ -1,7 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-const routes = express.Router();
+import globalRoutes from './src/routes/routes';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
@@ -21,20 +22,12 @@ const app = express();
 
 app.use(morgan('dev'));
 
-app.use(
-  routes.get('/', (req, res) => {
-    res.status(200).json({
-      mensagem: 'ok',
-    });
-  }),
-);
+app.use(bodyParser.json());
+
+app.use('/api/v1', globalRoutes);
 
 app.use((req, res) => {
-  res.status(404).json({
-    errors: {
-      message: 'Page not found...',
-    },
-  });
+  res.status(404).json({ message: 'Page not found...' });
 });
 
 export default app;
