@@ -2,11 +2,12 @@ import UserModel from '../models/UserModel';
 
 async function createUser({ body }, response) {
   try {
-    const user = body;
-    console.log(user);
+    const date = new Date().getTime();
+
     const result = await UserModel.create({
-      ...user,
-      created_at: new Date().getTime(),
+      ...body,
+      created_at: date,
+      updated_at: date,
     });
 
     return response.status(201).json(result);
@@ -25,4 +26,31 @@ async function listUsers(request, response) {
   }
 }
 
-export default { createUser, listUsers };
+async function editUser({ body, query: { id } }, response) {
+  try {
+    const result = await UserModel.findByIdAndUpdate(
+      id,
+      {
+        ...body,
+        updated_at: new Date().getTime(),
+      },
+      { returnDocument: 'after' },
+    );
+
+    return response.status(200).json(result);
+  } catch ({ message }) {
+    return response.status(400).json({ message });
+  }
+}
+
+async function deleteUser({ query: { id } }, response) {
+  try {
+    await UserModel.findByIdAndDelete(id);
+
+    return response.status(200).json({ message: 'User successfully deleted' });
+  } catch ({ message }) {
+    return response.status(400).json({ message });
+  }
+}
+
+export default { createUser, listUsers, editUser, deleteUser };
