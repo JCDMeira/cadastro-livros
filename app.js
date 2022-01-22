@@ -1,10 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+const routes = express.Router();
 
 dotenv.config();
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 mongoose
   .connect(process.env.CONNECTIONSTRING, {
@@ -20,23 +21,18 @@ const app = express();
 
 app.use(morgan('dev'));
 
-app.use('/', (req, res) => {
-  res.status(200).send({
-    mensagem: 'ok',
-  });
-});
+app.use(
+  routes.get('/', (req, res) => {
+    res.status(200).json({
+      mensagem: 'ok',
+    });
+  }),
+);
 
-app.use((req, res, next) => {
-  const error = new Error('Page not found...');
-  error.status = 404;
-  next(error);
-});
-
-app.use((error, req, res) => {
-  res.status(error.status || 500);
-  return res.json({
+app.use((req, res) => {
+  res.status(404).json({
     errors: {
-      message: error.message,
+      message: 'Page not found...',
     },
   });
 });
