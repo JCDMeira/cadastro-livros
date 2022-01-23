@@ -5,6 +5,11 @@ const BookSchema = new mongoose.Schema({
   author: { type: String, required: true },
   synopsis: { type: String, required: false },
   photo: { type: String, required: false, default: null },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'user',
+  },
   created_at: { type: Number, required: true },
   updated_at: { type: Number, required: true },
 });

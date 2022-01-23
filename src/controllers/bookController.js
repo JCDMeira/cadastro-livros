@@ -18,7 +18,9 @@ async function createBook({ body }, response) {
 
 async function listBooks(request, response) {
   try {
-    const result = await bookModel.find({}, { __v: 0 });
+    const result = await bookModel
+      .find({}, { __v: 0 })
+      .populate('created_by', { username: 1 });
 
     return response.status(200).json(result);
   } catch ({ message }) {
