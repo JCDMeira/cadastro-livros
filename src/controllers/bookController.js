@@ -36,7 +36,7 @@ async function findBook({ query: { id } }, response) {
   }
 }
 
-async function editBook({ body, query: { id }, response }) {
+async function editBook({ body, query: { id } }, response) {
   try {
     const result = await bookModel.findByIdAndUpdate(
       id,
@@ -53,7 +53,7 @@ async function editBook({ body, query: { id }, response }) {
   }
 }
 
-async function deleteBook({ query: { id }, response }) {
+async function deleteBook({ query: { id } }, response) {
   try {
     await bookModel.findByIdAndDelete(id);
 
