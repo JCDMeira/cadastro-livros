@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 dotenv.config();
 
 import mongoose from 'mongoose';
+import privateRoutes from './src/routes/privateRoutes';
 
 mongoose
   .connect(process.env.CONNECTIONSTRING, {
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 app.use('/api/v1', globalRoutes);
+app.use('/api/v1', privateRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Page not found...' });
