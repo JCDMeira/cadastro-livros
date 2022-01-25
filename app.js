@@ -27,7 +27,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 app.use('/api/v1', globalRoutes);
-// app.use(middleware);
+
 app.use('/api/v1', userRoutes);
 app.use('/api/v1', booksRoutes);
 
