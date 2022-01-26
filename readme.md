@@ -28,7 +28,10 @@
 
 # 🚀 Proposta <a name="id01"></a>
 
-Criar um API que possibilite o cadastro de livros.
+myBooks é uma API que permite o cadastro de livros. Trabalhando o CRUD de usuários e de Livros associados a esses usuários.
+É possível criar a partir de um usuário livros que contenham título e autor, podem ter sinopse e foto.
+
+A documentação desta API está disponível em: [Documentação](https://documenter.getpostman.com/view/11723922/UVXqECQg)
 
 <!-- ## :trophy: O desafio <a name="id01.1"></a>
 
@@ -105,6 +108,18 @@ npm install
 ou
 
 yarn install
+```
+
+Para iniciar o servidor é só usar o comando
+
+```
+yarn dev
+
+ou
+
+npm run dev
+
+<!-- Servidor funciona em localhost porta 3333 -->
 ```
 
 <br />
