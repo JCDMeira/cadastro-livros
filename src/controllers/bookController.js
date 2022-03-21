@@ -1,7 +1,7 @@
 import bookModel from '../models/bookModel';
 import isValid from '../Helper/validate';
 
-async function createBook({ body }, response) {
+async function createBook({ body, userId }, response) {
   try {
     const date = new Date().getTime();
 
@@ -9,8 +9,9 @@ async function createBook({ body }, response) {
 
     const result = await bookModel.create({
       ...anotherBody,
-      title: isValid(title).split(' '),
-      author: isValid(author).split(' '),
+      title: isValid(title).trim().split(' '),
+      author: isValid(author).trim().split(' '),
+      created_by: userId,
       created_at: date,
       updated_at: date,
     });
@@ -27,12 +28,16 @@ async function createBook({ body }, response) {
 async function listBooks(request, response) {
   try {
     const result = await bookModel
-      .find({}, { __v: 0 })
-      .populate('created_by', { username: request.userId });
+      .find({ created_by: request.userId }, { __v: 0 })
+      .populate('created_by');
 
     result.forEach((book) => {
       book.title = book.title.join(' ');
       book.author = book.author.join(' ');
+      book.created_by.password = undefined;
+      book.created_by.__v = undefined;
+      book.created_by.created_at = undefined;
+      book.created_by.updated_at = undefined;
     });
 
     return response.status(200).json(result);
@@ -41,11 +46,31 @@ async function listBooks(request, response) {
   }
 }
 
-async function findBook({ query: { id } }, response) {
+async function findBook({ query: { id, search }, userId }, response) {
   try {
-    const result = await bookModel.findById(id);
+    if (id) {
+      return response.status(200).json(await bookModel.findById(id));
+    }
+    if (search) {
+      const words = search.trim().split(' ');
 
-    return response.status(200).json(result);
+      const resultSearchTitle = await bookModel.find({
+        title: { $all: words },
+        created_by: userId,
+      });
+
+      const resultSearchAuthor = await bookModel.find({
+        author: { $all: words },
+        _id: { $ne: resultSearchTitle._id },
+        created_by: userId,
+      });
+
+      return response
+        .status(200)
+        .json(Object.assign(resultSearchTitle, resultSearchAuthor));
+    }
+
+    return response.status(200).json(await bookModel.find());
   } catch ({ message }) {
     return response.status(400).json({ message });
   }
